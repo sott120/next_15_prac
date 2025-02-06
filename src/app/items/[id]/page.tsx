@@ -14,6 +14,7 @@ import CheckWhite from "@/icons/check_white.svg";
 import Image from "next/image";
 import { postImage } from "@/util/postImage";
 import { deleteTodoListDetail } from "@/util/deleteTodoListDetail";
+import { updateTodoListDetail } from "@/util/updateTodoListDetail";
 
 export default function Items() {
   const router = useRouter();
@@ -101,10 +102,22 @@ export default function Items() {
     }
   };
 
+  // 수정
+  const handleUpdate = async () => {
+    if (!itemDetail?.name) {
+      alert("제목은 비워둘 수 없습니다!");
+      return;
+    }
+    try {
+      await updateTodoListDetail(itemDetail);
+      router.push("/");
+    } catch (err) {
+      console.error("Error during deletion:", err);
+    }
+  };
+
   // 삭제
   const handleDelete = async () => {
-    console.log("params: ", params);
-
     try {
       await deleteTodoListDetail(Number(params.id));
       router.push("/");
@@ -148,12 +161,18 @@ export default function Items() {
                 src={itemDetail.imageUrl}
                 alt="Uploaded Image"
                 fill
-                className="object-cover "
+                className="object-cover rounded-[24px]"
               />
             )}
 
             <UploadImg />
-            <div className="absolute bottom-4 right-4 w-16 h-16 rounded-[50%] bg-slate-200 flex justify-center items-center cursor-pointer">
+            <div
+              className={`absolute bottom-4 right-4 w-16 h-16 rounded-[50%] ${
+                itemDetail?.imageUrl
+                  ? "bg-slate-900/[0.5] border-slate-900  border-2"
+                  : "bg-slate-200"
+              } flex justify-center items-center cursor-pointer`}
+            >
               <input
                 type="file"
                 id="file-input"
@@ -161,11 +180,8 @@ export default function Items() {
                 onChange={(e) => handleFileChange(e)}
                 className="absolute border-0 p-0 w-16 h-16 cursor-pointer opacity-0"
               />
-              <PlusDark />
+              {itemDetail?.imageUrl ? <Edit /> : <PlusDark />}
             </div>
-            {/* <div className="absolute bottom-4 right-4 w-16 h-16 rounded-[50%] bg-slate-900/[0.5] border-2 border-slate-900 flex justify-center items-center cursor-pointer">
-              <Edit />
-            </div> */}
           </div>
           <div className="relative w-full md:flex-[6]">
             <div
@@ -180,15 +196,14 @@ export default function Items() {
               Memo
             </span>
             <textarea
+              defaultValue={itemDetail?.memo ? itemDetail?.memo : ""}
               onChange={(e) => changMemo(e.target.value)}
               className="relative w-full h-[248px] bg-transparent resize-none outline-none px-4 scrollbar-thin"
-            >
-              {itemDetail?.memo}
-            </textarea>
+            ></textarea>
           </div>
         </div>
         <div className="mt-6 flex justify-center md:justify-end">
-          <ButtonCustom type="confirm" text="수정하기" />
+          <ButtonCustom onClick={handleUpdate} type="confirm" text="수정하기" />
           <ButtonCustom onClick={handleDelete} type="delete" text="삭제하기" />
         </div>
       </section>
