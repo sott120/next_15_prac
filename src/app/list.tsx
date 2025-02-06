@@ -3,7 +3,7 @@ import Empty from "@/components/styles/empty";
 import Done from "@/icons/done.svg";
 import Todo from "@/icons/todo.svg";
 import CheckWhite from "@/icons/check_white.svg";
-import { fetchTodoList } from "@/util/getTodoList";
+import { getTodoList } from "@/util/getTodoList";
 import { IListItem } from "@/types/types";
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ export default function List({
   React.useEffect(() => {
     const getTodoData = async () => {
       try {
-        const { completed, incomplete } = await fetchTodoList();
+        const { completed, incomplete } = await getTodoList();
         setCompletedList(completed);
         setIncompleteList(incomplete);
       } catch (err: any) {
@@ -33,6 +33,37 @@ export default function List({
 
     getTodoData();
   }, []);
+
+  const statusChange = async (item: IListItem) => {
+    try {
+      const response = await fetch(
+        `https://assignment-todolist-api.vercel.app/api/tenantId/items/${item.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ isCompleted: !item.isCompleted }),
+        }
+      );
+      console.log(response.status);
+    } catch (err) {
+      console.log(err);
+      return;
+    } finally {
+      const getTodoData = async () => {
+        try {
+          const { completed, incomplete } = await getTodoList();
+          setCompletedList(completed);
+          setIncompleteList(incomplete);
+        } catch (err: any) {
+          console.error("Error in useEffect:", err);
+        }
+      };
+
+      getTodoData();
+    }
+  };
 
   return (
     <section className="flex flex-col mt-6 sm:mt-10 md:flex-row gap-4">
@@ -45,7 +76,12 @@ export default function List({
                 key={item.id}
                 className="w-full h-[50px] rounded-[27px] bg-white border-2 border-slate-900 flex items-center mb-4"
               >
-                <div className="w-8 h-8 flex-shrink-0 bg-yellow-50 border-2 border-slate-900 rounded-[27px] ml-3 mr-4 cursor-pointer"></div>
+                <div
+                  onClick={() => {
+                    statusChange(item);
+                  }}
+                  className="w-8 h-8 flex-shrink-0 bg-yellow-50 border-2 border-slate-900 rounded-[27px] ml-3 mr-4 cursor-pointer"
+                ></div>
                 <Link
                   href={`/items/${item.id}`}
                   className="w-full truncate overflow-hidden whitespace-nowrap pr-2 py-[14px] cursor-pointer"
@@ -68,7 +104,12 @@ export default function List({
                 key={item.id}
                 className="w-full h-[50px] rounded-[27px] bg-violet-100 border-2 border-slate-900 flex items-center mb-4 line-through"
               >
-                <div className="relative w-8 h-8 flex-shrink-0 bg-violet-600 border-2 border-slate-900 rounded-[27px] ml-3 mr-4 cursor-pointer">
+                <div
+                  onClick={() => {
+                    statusChange(item);
+                  }}
+                  className="relative w-8 h-8 flex-shrink-0 bg-violet-600 border-2 border-slate-900 rounded-[27px] ml-3 mr-4 cursor-pointer"
+                >
                   <CheckWhite className="absolute top-2 left-1" />
                 </div>
                 <Link

@@ -4,9 +4,10 @@ import Close from "@/icons/X.svg";
 interface IButtonCustom {
   type: "confirm" | "delete";
   text: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export default function ButtonCustom({ type, text }: IButtonCustom) {
+export default function ButtonCustom({ type, text, onClick }: IButtonCustom) {
   const isConfirm = type === "confirm";
 
   return (
@@ -16,6 +17,7 @@ export default function ButtonCustom({ type, text }: IButtonCustom) {
            before:border-2 before:border-slate-900 before:bg-slate-900"
     >
       <button
+        onClick={onClick}
         type="button"
         className={`w-[164.35px] h-[56px] sm:px-[24px] flex justify-center items-center ${
           isConfirm ? "bg-lime-300" : "bg-rose-500"

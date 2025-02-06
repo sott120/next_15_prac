@@ -1,7 +1,6 @@
 import { IListItem } from "@/types/types";
 
-export const fetchTodoList = async () => {
-  // export 추가
+export const getTodoList = async () => {
   try {
     const response = await fetch(
       `https://assignment-todolist-api.vercel.app/api/tenantId/items?page=1&pageSize=1000`
@@ -24,6 +23,6 @@ export const fetchTodoList = async () => {
     return { completed, incomplete }; // completed 와 incomplete 반환
   } catch (err: any) {
     console.error("Error fetching todo list:", err);
-    throw err; // 에러를 다시 던져서 호출하는 곳에서 처리하도록 함
+    throw err;
   }
 };

@@ -6,7 +6,7 @@ import ButtonSubmit from "@/components/styles/button_submit";
 import SInput from "@/components/styles/input";
 import List from "@/app/list";
 import { IListItem } from "@/types/types";
-import { fetchTodoList } from "@/util/getTodoList";
+import { getTodoList } from "@/util/getTodoList";
 // import { postTodo } from "@/api/api";
 
 export default function Home() {
@@ -41,7 +41,7 @@ export default function Home() {
     } finally {
       const getTodoData = async () => {
         try {
-          const { completed, incomplete } = await fetchTodoList();
+          const { completed, incomplete } = await getTodoList();
           setCompletedList(completed);
           setIncompleteList(incomplete);
         } catch (err: any) {
