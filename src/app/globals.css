@@ -2,20 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 스크롤바 스타일링 */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px; /* 스크롤바 두께 설정 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: theme("colors.amber.200"); /* 스크롤바 색상 설정 */
+}
+
+@font-face {
+  font-family: "NanumSquare";
+  src: url("/fonts/NanumSquareR.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NanumSquare";
+  src: url("/fonts/NanumSquareB.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f9fafb;
+  font-family: "NanumSquare";
+  line-height: 18.16px;
 }
